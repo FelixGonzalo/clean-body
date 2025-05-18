@@ -19,3 +19,9 @@ export interface IDailyChallenge {
   created_at: string
   challenge: IChallenge
 }
+
+export interface IUserChallenge {
+  id: number
+  created_at: string
+  challenge: IChallenge
+}

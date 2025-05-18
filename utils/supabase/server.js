@@ -1,7 +1,17 @@
 import { cookies } from 'next/headers'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { auth } from '@clerk/nextjs/server'
 
-export function createClient() {
+export async function createClient() {
   const cookieStore = cookies()
-  return createServerComponentClient({ cookies: () => cookieStore })
+  const { token  } = auth()
+
+  const supabase = createServerComponentClient({
+    cookies: () => cookieStore,
+    headers: () => ({
+      Authorization: `Bearer ${token }`,
+    }),
+  })
+
+  return supabase
 }
