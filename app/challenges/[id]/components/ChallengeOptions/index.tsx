@@ -2,7 +2,7 @@
 
 import { IChallenge, IDailyChallenge } from '@/types/IChallenge';
 import { useClerk, useSession } from '@clerk/nextjs';
-import CountdownTimer from '../../../../../components/CountdownTimer';
+import CountdownTimer, { CountdownTimerHandle } from '../../../../../components/CountdownTimer';
 import { useEffect, useRef, useState } from 'react';
 import { Loader } from '@/components/Loader';
 import { Button, buttonStyle, ConfirmButton } from '@/components/Button';
@@ -27,7 +27,7 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
   const ConfirmChallenge = useConfirmChallenge();
   const GetUserChallenges = useGetUserTodayChallenges()
 
-  const timerRef = useRef(null);
+  const timerRef = useRef<CountdownTimerHandle  | null>(null);
   const messageRef = useRef("");
   const [step, setStep] = useState(STEP.INITIAL);
 
@@ -62,7 +62,7 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
       challenge_id: challenge.id,
     });
     setStep(STEP.SUCCESS);
-    GetUserChallenges.handle({session})
+    GetUserChallenges.handle({session, userId: session.user.id})
   };
 
   const onReset = () => {

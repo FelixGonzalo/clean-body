@@ -5,13 +5,7 @@ import { getUserChallenges } from "@/services/getUserChallenges";
 import { createLastWeekObject, createWeekObject } from "@/utils/createWeekObject";
 import { clerkClient} from "@clerk/nextjs/server";
 
-interface Props {
-  params: {
-    userId: string;
-  };
-}
-
-export default async function Dev({ params }: Props) {
+export default async function Dev({params}: {params: Promise<{ userId: string }>}) {
   const { userId } = await params;
   const clerk = await clerkClient();
   const user = await clerk.users.getUser(userId);

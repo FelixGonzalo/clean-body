@@ -8,8 +8,13 @@ const formatTime = (totalSeconds: number) => {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
 
+export type CountdownTimerHandle = {
+  startTimer: () => void;
+  resetTimer: () => void;
+};
+
 /** Por defecto de 1 minuto */
-const CountdownTimer = ({ref, time = 60, onFinish} : {ref: Ref<unknown>,time?: number, onFinish?: () => void}) => {
+const CountdownTimer = ({ref, time = 60, onFinish} : {ref: Ref<CountdownTimerHandle >,time?: number, onFinish?: () => void}) => {
   const [timeLeft, setTimeLeft] = useState(time);
   const [start, setStart] = useState(false);
   const ref_timer = useRef<NodeJS.Timeout | null>(null)

@@ -4,15 +4,12 @@ import { getChallenge } from '@/services/getChallenge';
 import { redirect } from 'next/navigation';
 import { getTodayChallenges } from '@/services/getTodayChallenges';
 
-interface Params {
-  params: { id: string };
-}
-
-export default async function Challenge({ params }: Params) {
-  if (!params?.id) return redirect('/');
+export default async function Challenge({params}: {params: Promise<{ id: string }>}) {
+  const { id } = await params;
+  if (!id) return redirect('/');
 
   const [challenge, todayChallenges] = await Promise.all([
-    getChallenge({ id: params.id }),
+    getChallenge({ id }),
     getTodayChallenges(),
   ]);
 
