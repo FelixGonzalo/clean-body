@@ -23,6 +23,7 @@ ChartJS.register(
 );
 
 const labels = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+const fullLabels = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
 export const ProgressChart = ({
   thisWeekCount,
@@ -40,6 +41,17 @@ export const ProgressChart = ({
           plugins: {
             legend: {
               position: 'top' as const,
+            },
+            tooltip: {
+              callbacks: {
+                title: function (tooltipItems) {
+                  const index = tooltipItems[0].dataIndex;
+                  return fullLabels[index]; // Muestra el nombre completo del día
+                },
+                label: function (context) {
+                  return `Retos completados: ${context.parsed.y}`;
+                },
+              },
             },
           },
           scales: {
