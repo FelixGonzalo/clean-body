@@ -4,7 +4,6 @@ const partialCompletionMessages = [
   "Eso sí fue un buen commit a tu salud",
   "¡Vas por buen camino! Tu cuerpo ya te lo está agradeciendo.",
   "Eso fue mejor que un commit sin errores. ¡Vamos por el siguiente!",
-  "Buen calentamiento. Ahora a completar la trilogía de bienestar.",
   "Más cerca de la victoria. ¡No pares ahora!",
   "Ya saliste del modo reposo. ¡Sigamos con fuerza!"
 ];

@@ -9,7 +9,7 @@ export async function getTodayChallenges(): Promise<IDailyChallenge[]>  {
 
   const { data, error } = await supabase
     .from('daily_challenges')
-    .select('id, created_at, challenges(id, title, category, description)')
+    .select('id, created_at, challenges(id, title, category, description, timer)')
     .gte('created_at', start)
     .lte('created_at', end)
     .limit(3);

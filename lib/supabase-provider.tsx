@@ -3,6 +3,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { useSession } from '@clerk/nextjs'
 import { createContext, useContext, useEffect, useState } from 'react'
+import { Loader } from '@/components/Loader'
 
 type SupabaseContext = {
   supabase: SupabaseClient | null
@@ -38,7 +39,11 @@ export default function SupabaseProvider({ children }: Props) {
 
   return (
     <Context.Provider value={{ supabase, isLoaded }}>
-      {!isLoaded ? <div>Loading...</div> : children }
+      {!isLoaded ? (
+        <div className="flex justify-start h-20">
+          <Loader />
+        </div>
+      ) : children }
     </Context.Provider>
   )
 }

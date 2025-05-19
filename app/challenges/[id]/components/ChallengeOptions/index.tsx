@@ -1,13 +1,15 @@
 'use client';
 
-import { IChallenge } from '@/types/IChallenge';
+import { IChallenge, IDailyChallenge, IUserChallenge } from '@/types/IChallenge';
 import { useClerk, useSession } from '@clerk/nextjs';
 import CountdownTimer from '../../../../../components/CountdownTimer';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createSupabaseClient } from '@/lib/supabase-client';
 import { Loader } from '@/components/Loader';
-import { Button, ConfirmButton } from '@/components/Button';
+import { Button, buttonStyle, ConfirmButton } from '@/components/Button';
 import { getRandomMessage } from '@/utils/getRandomMessage';
+import { TodayChallenges } from '@/components/TodayChallenges';
+import Link from 'next/link';
 
 const STEP = {
   INITIAL: 1,
@@ -15,6 +17,38 @@ const STEP = {
   SHOW_CONFIRM: 3,
   SUCCESS: 4,
 };
+
+const useGetUserTodayChallenges = () => {
+  const [loading, setLoading] = useState(true)
+  const [data, setData] = useState<IUserChallenge[]>([])
+
+  const handle = async ({session}: {session: any}) => {
+    const client = createSupabaseClient(session);
+    setLoading(true)
+
+    const today = new Date();
+    const start = new Date(today.setHours(0, 0, 0, 0)).toISOString();
+    const end = new Date(today.setHours(23, 59, 59, 999)).toISOString();
+
+    const { data, error } = await client.from('user_challenge_progress')
+      .select('id, created_at, challenges(id, title, category, description, timer)')
+      .gte('created_at', start)
+      .lte('created_at', end)
+
+    if (!error) {
+      const formatted = data?.map(item => ({
+        id: item.id,
+        created_at: item.created_at,
+        challenge: item.challenges?.[0] || item?.challenges,
+      }))
+
+      setData(formatted)
+    }
+    setLoading(false)
+  }
+
+  return {data, loading, handle}
+}
 
 const useConfirmChallenge = () => {
   const [loading, setLoading] = useState(false);
@@ -36,28 +70,49 @@ const useConfirmChallenge = () => {
   return { loading, handle };
 };
 
-export const ChallengeOptions = ({ challenge }: { challenge: IChallenge }) => {
+export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IChallenge, todayChallenges: IDailyChallenge[] }) => {
+
   const clerk = useClerk();
   const { session } = useSession();
   const ConfirmChallenge = useConfirmChallenge();
+  const GetUserChallenges = useGetUserTodayChallenges()
+
   const timerRef = useRef(null);
+  const messageRef = useRef("");
   const [step, setStep] = useState(STEP.INITIAL);
 
+  const isTodayChallenge = todayChallenges.find(obj => obj.challenge.id === challenge.id)
+  const isConfirmedChallenge = GetUserChallenges.data.find(obj => obj.challenge.id === challenge.id)
+
+  const userChallengeUuids = GetUserChallenges.data.map(obj => obj.challenge.id)
+  const allConfirmedChallenges = todayChallenges.every(obj => userChallengeUuids.includes(obj.challenge.id))
+
+
+  useEffect(() => {
+    messageRef.current = getRandomMessage(allConfirmedChallenges)
+  }, [])
+
+  useEffect(() => {
+    if (!session) return;
+    GetUserChallenges.handle({session})
+  }, [session])
+
   const onStart = async () => {
-    if (!session) {
-      clerk.openSignIn({});
-      return;
-    }
     timerRef?.current?.startTimer?.();
     setStep(STEP.START_TIMER);
   };
 
   const onConfirm = async () => {
+    if (!session) {
+      clerk.openSignIn({});
+      return;
+    }
     await ConfirmChallenge.handle({
       session,
       challenge_id: challenge.id,
     });
     setStep(STEP.SUCCESS);
+    GetUserChallenges.handle({session})
   };
 
   const onReset = () => {
@@ -65,15 +120,75 @@ export const ChallengeOptions = ({ challenge }: { challenge: IChallenge }) => {
     setStep(STEP.START_TIMER);
   };
 
-  if (step === STEP.SUCCESS) {
+  if (session && GetUserChallenges.loading)  {
+    return (
+      <div className="flex justify-start h-20">
+        <Loader />
+      </div>
+    )
+  }
+
+  if (!isTodayChallenge) {
     return (
       <div className='text-center mt-20'>
         <p className='text-5xl mt-4 mb-10 text-red-400'>
+          Los retos de hoy
+        </p>
+        <TodayChallenges
+          challenges={todayChallenges}
+          userTodayChallenges={GetUserChallenges.data}
+          isMainDesign={false}
+        />
+      </div>
+    )
+  }
+
+  if (allConfirmedChallenges) {
+    return (
+      <div className='text-center mt-20 max-w-200 mx-auto'>
+        <p className='text-5xl mt-4 mb-10 text-red-400 text-balance'>
+          {messageRef.current}
+        </p>
+        <p className='text-xl text-balance'>
+          Has completado todos los retos de hoy. ¡Felicidades!
+        </p>
+        <div className='flex gap-4 justify-center mt-10'>
+          <ConfirmButton
+            onClick={onStart}
+            children="Compartir"
+          />
+          <Link
+            className={buttonStyle}
+            href={"/my-challenges"}
+            children="Mis retos"
+          />
+        </div>
+      </div>
+    )
+  }
+
+  if (isConfirmedChallenge) {
+    return (
+      <div className='mt-20'>
+        <p className='text-center text-5xl mt-4 mb-10 text-red-400'>
           {getRandomMessage()}
         </p>
-        <Button
-          onClick={() => {}}
-          children="Ver siguiente reto"
+        <TodayChallenges
+          challenges={todayChallenges}
+          userTodayChallenges={GetUserChallenges.data}
+          isMainDesign={false}
+        />
+      </div>
+    )
+  }
+
+  if (step === STEP.SUCCESS) {
+    return (
+      <div className='mt-20'>
+        <TodayChallenges
+          challenges={todayChallenges}
+          userTodayChallenges={GetUserChallenges.data}
+          isMainDesign={false}
         />
       </div>
     )
@@ -83,7 +198,7 @@ export const ChallengeOptions = ({ challenge }: { challenge: IChallenge }) => {
     <div>
       <CountdownTimer
         ref={timerRef}
-        time={3}
+        time={challenge?.timer}
         onFinish={() => {
           setStep(STEP.SHOW_CONFIRM);
         }}

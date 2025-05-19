@@ -1,18 +1,24 @@
-import { Badge } from '@/components/Badge';
+import { Badge, DisabledBadge } from '@/components/Badge';
 import { ChallengeOptions } from '@/app/challenges/[id]/components/ChallengeOptions';
 import { getChallenge } from '@/services/getChallenge';
+import { redirect } from 'next/navigation';
+import { getTodayChallenges } from '@/services/getTodayChallenges';
 
 interface Params {
   params: { id: string };
 }
 
 export default async function Challenge({ params }: Params) {
+  if (!params?.id) return redirect('/');
 
-  if (!params?.id) return <main>No hay reto</main>
+  const [challenge, todayChallenges] = await Promise.all([
+    getChallenge({ id: params.id }),
+    getTodayChallenges(),
+  ]);
 
-  const challenge = await getChallenge({id: params.id})
+  if (!challenge) return redirect('/');
 
-  if (!challenge) return <main>No hay reto</main>
+  const isTodayChallenge = todayChallenges.find(obj => obj.challenge.id === challenge.id)
 
   return (
     <main className='h-screen'>
@@ -21,17 +27,27 @@ export default async function Challenge({ params }: Params) {
         src="https://media.revistagq.com/photos/5d35929de887bb000828e8f3/16:9/w_1920,c_limit/GettyImages-982408932-(1).jpg"
         alt=""
       />
-      <div className='p-4 lg:p-10'>
+      <div className='p-4 pt-10 lg:p-10'>
         <h1 className='text-5xl'>
           {challenge.title}
         </h1>
-        <Badge>
-          {challenge.category}
-        </Badge>
+        <div className='my-2 flex gap-2'>
+          {!isTodayChallenge && (
+            <DisabledBadge>
+              No disponible hoy
+            </DisabledBadge>
+          )}
+          <Badge>
+            {challenge.category}
+          </Badge>
+        </div>
         <p className='text-balance my-4 text-gray-300'>
           {challenge.description}
         </p>
-        <ChallengeOptions challenge={challenge} />
+        <ChallengeOptions
+          challenge={challenge}
+          todayChallenges={todayChallenges}
+        />
       </div>
     </main>
   )

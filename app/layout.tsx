@@ -47,7 +47,7 @@ export default function RootLayout({
               <SignUpButton />
             </SignedOut>
             <SignedIn>
-              <Link href={"/profile"}>Mi perfil</Link>
+              <Link href={"/my-challenges"}>Mis retos</Link>
               <UserButton />
             </SignedIn>
           </header>
