@@ -4,8 +4,24 @@ import { ProgressChart } from "@/components/ProgressChart";
 import { getUserChallenges } from "@/services/getUserChallenges";
 import { createLastWeekObject, createWeekObject } from "@/utils/createWeekObject";
 import { clerkClient} from "@clerk/nextjs/server";
+import { Metadata } from "next";
 
-export default async function Dev({params}: {params: Promise<{ userId: string }>}) {
+type Props = {params: Promise<{ userId: string }>}
+
+export async function generateMetadata(
+  { params }: Props,
+): Promise<Metadata> {
+  const { userId } = await params
+  const clerk = await clerkClient();
+  const user = await clerk.users.getUser(userId);
+
+  return {
+    title: `${user.fullName || "Dev"} | Clean Body`,
+    description: 'Eres tu principal framework, mantenlo actualizado',
+  }
+}
+
+export default async function Dev({params}: Props) {
   const { userId } = await params;
   const clerk = await clerkClient();
   const user = await clerk.users.getUser(userId);

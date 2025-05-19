@@ -37,3 +37,7 @@ body {
 .animate-background-shine {
   animation: background-shine 2s linear infinite;
 }
+
+@view-transition {
+  navigation: auto;
+}

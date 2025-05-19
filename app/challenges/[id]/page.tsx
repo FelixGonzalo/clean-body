@@ -3,8 +3,24 @@ import { ChallengeOptions } from '@/app/challenges/[id]/components/ChallengeOpti
 import { getChallenge } from '@/services/getChallenge';
 import { redirect } from 'next/navigation';
 import { getTodayChallenges } from '@/services/getTodayChallenges';
+import { Metadata } from 'next';
 
-export default async function Challenge({params}: {params: Promise<{ id: string }>}) {
+type Props = {params: Promise<{ id: string }>}
+
+export async function generateMetadata(
+  { params }: Props,
+): Promise<Metadata> {
+  const { id } = await params
+
+  const challenge = await getChallenge({ id });
+
+  return {
+    title: `${challenge?.title || "Reto"} | Clean Body`,
+    description: challenge?.description || 'Un cuerpo activo compila mejor',
+  }
+}
+
+export default async function Challenge({params}: Props) {
   const { id } = await params;
   if (!id) return redirect('/');
 

@@ -13,7 +13,7 @@ import { ProgressShareButton } from "@/components/ProgressShareButton";
 import { useGetTodayChallenges } from "@/hooks/useGetTodayChallenges";
 import { useGetUserChallenges } from "@/hooks/useGetUserChallenges";
 
-export default function Profiles() {
+export default function MyChallenges() {
   const { session } = useSession()
   const user = session?.user
 
