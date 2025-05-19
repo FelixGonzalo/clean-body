@@ -1,5 +1,5 @@
 import { IDailyChallenge } from '@/types/IChallenge';
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@/lib/supabase-server'
 
 export async function getTodayChallenges(): Promise<IDailyChallenge[]>  {
   const supabase = await createClient()

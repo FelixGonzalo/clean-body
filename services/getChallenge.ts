@@ -1,5 +1,5 @@
 import { IChallenge } from '@/types/IChallenge'
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@/lib/supabase-server'
 
 export async function getChallenge({ id }: {id?: string}): Promise<IChallenge | null>  {
   if (!id) return null
