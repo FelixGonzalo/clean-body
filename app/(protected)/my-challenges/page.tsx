@@ -20,6 +20,8 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { Button, ConfirmButton } from "@/components/Button";
+import { onShare } from "@/utils/onShare";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -135,7 +137,6 @@ export default function Profiles() {
     .filter(([date]) => date <= todayStr)
     .map(([_, count]) => count);
 
-
   useEffect(() => {
     GetUserChallenges.handle()
   }, [])
@@ -152,8 +153,13 @@ export default function Profiles() {
         </div>
       ) : (
         <div className="flex flex-col gap-10 mt-4">
-          <div className="max-w-100">
-            <h2 className="my-4 text-gray-500 font-bold ">Progreso</h2>
+          <div className="flex gap-2 justify-center">
+            <Button onClick={() => { }}>
+              Compartir mi progreso
+            </Button>
+          </div>
+          <div>
+            <h2 className="mb-4 text-gray-500 font-bold ">Progreso</h2>
             <Line
               options={{
                 responsive: true,
@@ -185,23 +191,46 @@ export default function Profiles() {
           <div>
             <h2 className="mb-4 text-gray-500 font-bold ">Últimos retos</h2>
             <div className="flex flex-col gap-4">
-              {GetUserChallenges.data?.map(obj => (
-                <article key={obj.id} className="border-l-2 border-gray-500 pl-4">
-                  <h2 className="mt-1">
-                    {obj.challenge?.title}
-                  </h2>
-                  <Badge>
-                    {obj.challenge?.category}
-                  </Badge>
-                  <span className="ml-1 text-gray-500 inline-block rounded-sm text-sm lowercase">
-                    {formatDate(obj.created_at)}
-                  </span>
-                </article>
-              ))}
+              {GetUserChallenges.data?.map(obj => <ChallengeCard userChallenge={obj} todayStr={todayStr} />)}
             </div>
           </div>
         </div>
       )}
     </main>
+  )
+}
+
+const ChallengeCard = ({ userChallenge, todayStr}: { userChallenge: IUserChallenge, todayStr: string}) => {
+  const isToday = new Date(userChallenge.created_at).toISOString().substring(0, 10) === todayStr;
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = () => {
+    const url = `${window.location.origin}/challenges/${userChallenge.challenge.id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3000);
+    });
+    onShare("Te desafío a que lo hagas", url); // opcional, si aún necesitas llamarlo
+  };
+
+  return (
+    <article key={userChallenge.id} className="border-l-2 border-gray-500 pl-4 py-1">
+      <h2>
+        {userChallenge.challenge?.title}
+      </h2>
+      <div className="mt-1 mb-3">
+        <Badge>
+          {userChallenge.challenge?.category}
+        </Badge>
+        <span className="ml-1 text-gray-500 inline-block rounded-sm text-sm lowercase">
+          {formatDate(userChallenge.created_at)}
+        </span>
+      </div>
+      {isToday && (
+        <ConfirmButton onClick={() => handleShare()}>
+          {copied ? "¡Link copiado! Compártelo" : "¡Desafía ahora!"}
+        </ConfirmButton>
+      )}
+    </article>
   )
 }
