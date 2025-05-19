@@ -1,75 +1,23 @@
 'use client';
 
-import { IChallenge, IDailyChallenge, IUserChallenge } from '@/types/IChallenge';
+import { IChallenge, IDailyChallenge } from '@/types/IChallenge';
 import { useClerk, useSession } from '@clerk/nextjs';
 import CountdownTimer from '../../../../../components/CountdownTimer';
 import { useEffect, useRef, useState } from 'react';
-import { createSupabaseClient } from '@/lib/supabase-client';
 import { Loader } from '@/components/Loader';
 import { Button, buttonStyle, ConfirmButton } from '@/components/Button';
 import { getRandomMessage } from '@/utils/getRandomMessage';
 import { TodayChallenges } from '@/components/TodayChallenges';
 import Link from 'next/link';
-import { ShareProgressButton } from '@/components/ShareProgressButon';
+import { ProgressShareButton } from '@/components/ProgressShareButton';
+import { useConfirmChallenge } from '@/hooks/useConfirmChallenge';
+import { useGetUserTodayChallenges } from '@/hooks/useGetUserTodayChallenges';
 
 const STEP = {
   INITIAL: 1,
   START_TIMER: 2,
   SHOW_CONFIRM: 3,
   SUCCESS: 4,
-};
-
-const useGetUserTodayChallenges = () => {
-  const [loading, setLoading] = useState(true)
-  const [data, setData] = useState<IUserChallenge[]>([])
-
-  const handle = async ({session, userId}: {session: any, userId: string}) => {
-    const client = createSupabaseClient(session);
-    setLoading(true)
-
-    const today = new Date();
-    const start = new Date(today.setHours(0, 0, 0, 0)).toISOString();
-    const end = new Date(today.setHours(23, 59, 59, 999)).toISOString();
-
-    const { data, error } = await client.from('user_challenge_progress')
-      .select('id, created_at, challenges(id, title, category, description, timer)')
-      .eq('user_id', userId)
-      .gte('created_at', start)
-      .lte('created_at', end)
-
-    if (!error) {
-      const formatted = data?.map(item => ({
-        id: item.id,
-        created_at: item.created_at,
-        challenge: item.challenges?.[0] || item?.challenges,
-      }))
-
-      setData(formatted)
-    }
-    setLoading(false)
-  }
-
-  return {data, loading, handle}
-}
-
-const useConfirmChallenge = () => {
-  const [loading, setLoading] = useState(false);
-  const handle = async ({
-    session,
-    challenge_id,
-  }: {
-    session: any;
-    challenge_id: string;
-  }) => {
-    setLoading(true);
-    const client = createSupabaseClient(session);
-    await client.from('user_challenge_progress').insert({
-      challenge_id,
-    });
-    setLoading(false);
-  };
-
-  return { loading, handle };
 };
 
 export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IChallenge, todayChallenges: IDailyChallenge[] }) => {
@@ -155,7 +103,7 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
           Has completado todos los retos de hoy. ¡Felicidades!
         </p>
         <div className='flex gap-4 justify-center mt-10'>
-          <ShareProgressButton user={session?.user} isConfirmButton />
+          <ProgressShareButton user={session?.user} isConfirmButton />
           <Link
             className={buttonStyle}
             href={"/my-challenges"}

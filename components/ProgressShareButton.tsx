@@ -2,7 +2,7 @@ import { onShare } from "@/utils/onShare";
 import { useState } from "react";
 import { Button, ConfirmButton } from "./Button";
 
-export const ShareProgressButton = ({ user, isConfirmButton = false }: { user: any, isConfirmButton?: boolean }) => {
+export const ProgressShareButton = ({ user, isConfirmButton = false }: { user: any, isConfirmButton?: boolean }) => {
   const [copied, setCopied] = useState(false);
 
   const handleShare = () => {

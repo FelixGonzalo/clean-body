@@ -1,80 +1,17 @@
 'use client';
 
 import { Loader } from "@/components/Loader";
-import { useSupabase } from "@/lib/supabase-provider";
-import { IDailyChallenge, IUserChallenge } from "@/types/IChallenge";
 import { useSession } from "@clerk/nextjs"
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { TodayChallenges } from "@/components/TodayChallenges";
 import { Avatar } from "@/components/Avatar";
 import { ProgressChart } from "@/components/ProgressChart";
 import { createLastWeekObject, createWeekObject } from "@/utils/createWeekObject";
 import { LastChallenges } from "@/components/LastChallenges";
-import { ShareProgressButton } from "@/components/ShareProgressButon";
-
-const useGetTodayChallenges = () => {
-  const { supabase } = useSupabase()
-  const [loading, setLoading] = useState(true)
-  const [data, setData] = useState<IDailyChallenge[]>([])
-
-  const handle = async () => {
-    if (!supabase) return;
-    setLoading(true)
-    const today = new Date();
-    const start = new Date(today.setHours(0, 0, 0, 0)).toISOString();
-    const end = new Date(today.setHours(23, 59, 59, 999)).toISOString();
-
-    const { data, error } = await supabase
-      .from('daily_challenges')
-      .select('id, created_at, challenges(id, title, category, description, timer)')
-      .gte('created_at', start)
-      .lte('created_at', end)
-      .limit(3);
-
-    if (!error) {
-      const formatted = data?.map(item => ({
-        id: item.id,
-        created_at: item.created_at,
-        challenge: item.challenges?.[0] || item?.challenges,
-      }))
-
-      setData(formatted)
-    }
-    setLoading(false)
-  }
-
-  return {data, loading, handle}
-}
-
-const useGetUserChallenges = () => {
-  const { supabase } = useSupabase()
-  const [loading, setLoading] = useState(true)
-  const [data, setData] = useState<IUserChallenge[]>([])
-
-  const handle = async ({userId}: {userId: string}) => {
-    if (!supabase) return;
-    setLoading(true)
-    const { data, error } = await supabase.from('user_challenge_progress')
-      .select('id, created_at, challenges(id, title, category, description, timer)')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(20);
-
-    if (!error) {
-      const formatted = data?.map(item => ({
-        id: item.id,
-        created_at: item.created_at,
-        challenge: item.challenges?.[0] || item?.challenges,
-      }))
-
-      setData(formatted)
-    }
-    setLoading(false)
-  }
-
-  return {data, loading, handle}
-}
+import { ProgressShareButton } from "@/components/ProgressShareButton";
+import { useGetTodayChallenges } from "@/hooks/useGetTodayChallenges";
+import { useGetUserChallenges } from "@/hooks/useGetUserChallenges";
 
 export default function Profiles() {
   const { session } = useSession()
@@ -133,7 +70,7 @@ export default function Profiles() {
       ) : (
         <div className="flex flex-col gap-10 mt-4">
           <div className="flex gap-2 justify-center">
-            <ShareProgressButton user={user} />
+            <ProgressShareButton user={user} />
           </div>
           <ProgressChart thisWeekCount={thisWeekCount} lastWeekCount={lastWeekCount} />
           {GetTodayChallenges.loading ? (

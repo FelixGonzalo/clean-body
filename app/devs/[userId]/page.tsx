@@ -1,8 +1,6 @@
 import { Avatar } from "@/components/Avatar";
 import { LastChallenges } from "@/components/LastChallenges";
 import { ProgressChart } from "@/components/ProgressChart";
-import {TodayChallenges} from "@/components/TodayChallenges";
-import { getTodayChallenges } from "@/services/getTodayChallenges";
 import { getUserChallenges } from "@/services/getUserChallenges";
 import { createLastWeekObject, createWeekObject } from "@/utils/createWeekObject";
 import { clerkClient} from "@clerk/nextjs/server";
