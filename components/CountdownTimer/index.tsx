@@ -1,6 +1,13 @@
 'use client';
 
 import { Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
+
+const formatTime = (totalSeconds: number) => {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+};
+
 /** Por defecto de 1 minuto */
 const CountdownTimer = ({ref, time = 60, onFinish} : {ref: Ref<unknown>,time?: number, onFinish?: () => void}) => {
   const [timeLeft, setTimeLeft] = useState(time);
@@ -15,7 +22,6 @@ const CountdownTimer = ({ref, time = 60, onFinish} : {ref: Ref<unknown>,time?: n
 
   const resetTimer = () => {
     if (ref_timer?.current) {
-      clearInterval(ref_timer.current)
       setTimeLeft(time)
     }
   }
@@ -43,12 +49,6 @@ const CountdownTimer = ({ref, time = 60, onFinish} : {ref: Ref<unknown>,time?: n
       }
     };
   }, [timeLeft, start]);
-
-  const formatTime = (totalSeconds: number) => {
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
 
   const zeroStyle = timeLeft > 0 ? "" : "text-red-500"
 
