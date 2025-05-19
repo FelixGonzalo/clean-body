@@ -31,7 +31,7 @@ export const TodayChallenges = ({challenges = [], isMainDesign = true, userToday
                     <div className="flex gap-2 my-1">
                       {isConfirmed && (
                         <DisabledBadge>
-                          Reto cumplido
+                          Reto completado
                         </DisabledBadge>
                       )}
                       <Badge>

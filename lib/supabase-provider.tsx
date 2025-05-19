@@ -40,7 +40,7 @@ export default function SupabaseProvider({ children }: Props) {
   return (
     <Context.Provider value={{ supabase, isLoaded }}>
       {!isLoaded ? (
-        <div className="flex justify-start h-20">
+        <div className="flex justify-center h-20">
           <Loader />
         </div>
       ) : children }

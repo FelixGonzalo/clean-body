@@ -3,7 +3,7 @@
 import { Badge } from "@/components/Badge";
 import { Loader } from "@/components/Loader";
 import { useSupabase } from "@/lib/supabase-provider";
-import { IUserChallenge } from "@/types/IChallenge";
+import { IDailyChallenge, IUserChallenge } from "@/types/IChallenge";
 import { formatDate } from "@/utils/formatDate";
 import { useSession } from "@clerk/nextjs"
 import { useEffect, useState } from "react";
@@ -22,6 +22,8 @@ import {
 } from 'chart.js';
 import { Button, ConfirmButton } from "@/components/Button";
 import { onShare } from "@/utils/onShare";
+import { TodayChallenges } from "@/components/TodayChallenges";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -32,6 +34,39 @@ ChartJS.register(
   Legend
 );
 
+const useGetTodayChallenges = () => {
+  const { supabase } = useSupabase()
+  const [loading, setLoading] = useState(true)
+  const [data, setData] = useState<IDailyChallenge[]>([])
+
+  const handle = async () => {
+    if (!supabase) return;
+    setLoading(true)
+    const today = new Date();
+    const start = new Date(today.setHours(0, 0, 0, 0)).toISOString();
+    const end = new Date(today.setHours(23, 59, 59, 999)).toISOString();
+
+    const { data, error } = await supabase
+      .from('daily_challenges')
+      .select('id, created_at, challenges(id, title, category, description, timer)')
+      .gte('created_at', start)
+      .lte('created_at', end)
+      .limit(3);
+
+    if (!error) {
+      const formatted = data?.map(item => ({
+        id: item.id,
+        created_at: item.created_at,
+        challenge: item.challenges?.[0] || item?.challenges,
+      }))
+
+      setData(formatted)
+    }
+    setLoading(false)
+  }
+
+  return {data, loading, handle}
+}
 
 const useGetUserChallenges = () => {
   const { supabase } = useSupabase()
@@ -113,6 +148,7 @@ export default function Profiles() {
   const user = session?.user
 
   const GetUserChallenges = useGetUserChallenges()
+  const GetTodayChallenges = useGetTodayChallenges()
 
   const thisWeekObj = createWeekObject(new Date());
   const lastWeekObj = createLastWeekObject();
@@ -138,12 +174,22 @@ export default function Profiles() {
     .map(([_, count]) => count);
 
   useEffect(() => {
+    GetTodayChallenges.handle()
     GetUserChallenges.handle()
   }, [])
 
+
+  const userTodayChallenges = GetUserChallenges.data?.filter(obj => {
+    return obj.created_at.substring(0, 10) === todayStr
+  })
+  const userChallengesUuids = userTodayChallenges?.map(obj => obj.challenge.id) || []
+  const pendingChallenges = GetTodayChallenges.data?.filter(obj => {
+    return !userChallengesUuids.includes(obj.challenge.id)
+  })
+
   return (
     <main className="p-4 max-w-100 mx-auto mb-20">
-      <div className="text-center flex flex-col gap-4 justify-center items-center">
+      <div className="min-h-30 text-center flex flex-col gap-4 justify-center items-center">
         <img src={user?.imageUrl} alt={user?.fullName || ""} className="rounded-full w-20 h-20 object-cover" />
         <h1 className="text-2xl">{user?.fullName || ""}</h1>
       </div>
@@ -158,7 +204,7 @@ export default function Profiles() {
               Compartir mi progreso
             </Button>
           </div>
-          <div>
+          <div className="min-h-50">
             <h2 className="mb-4 text-gray-500 font-bold ">Progreso</h2>
             <Line
               options={{
@@ -188,10 +234,20 @@ export default function Profiles() {
               }}
             />
           </div>
+          {GetTodayChallenges.loading ? (
+            <div className="flex justify-center h-20">
+              <Loader />
+            </div>
+          ) : pendingChallenges?.length > 0 ? (
+            <div>
+              <h2 className="mb-4 text-gray-500 font-bold ">Retos pendientes</h2>
+              <TodayChallenges challenges={pendingChallenges} isMainDesign={false} />
+            </div>
+          ) : null}
           <div>
-            <h2 className="mb-4 text-gray-500 font-bold ">Últimos retos</h2>
+            <h2 className="mb-4 text-gray-500 font-bold ">Últimos retos completados</h2>
             <div className="flex flex-col gap-4">
-              {GetUserChallenges.data?.map(obj => <ChallengeCard userChallenge={obj} todayStr={todayStr} />)}
+              {GetUserChallenges.data?.slice(0, 10)?.map(obj => <ChallengeCard userChallenge={obj} todayStr={todayStr} />)}
             </div>
           </div>
         </div>

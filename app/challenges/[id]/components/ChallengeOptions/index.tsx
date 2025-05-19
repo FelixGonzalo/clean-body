@@ -155,7 +155,7 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
         <div className='flex gap-4 justify-center mt-10'>
           <ConfirmButton
             onClick={onStart}
-            children="Compartir"
+            children="Compartir mi progreso"
           />
           <Link
             className={buttonStyle}
@@ -171,7 +171,7 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
     return (
       <div className='mt-20'>
         <p className='text-center text-5xl mt-4 mb-10 text-red-400'>
-          {getRandomMessage()}
+          Reto completado
         </p>
         <TodayChallenges
           challenges={todayChallenges}
