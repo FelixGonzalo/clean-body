@@ -1,5 +1,7 @@
 import {TodayChallenges} from "@/components/TodayChallenges";
 import { getTodayChallenges } from "@/services/getTodayChallenges";
+import Link from "next/link";
+import { GithubIcon } from "@/components/icons/github-icon";
 
 export default async function Home() {
   const challenges = await getTodayChallenges()
@@ -18,8 +20,13 @@ export default async function Home() {
         </div>
         <TodayChallenges challenges={challenges} />
       </main>
-      <footer className="text-center p-4 pb-10 pt-20">
-        <p>Creado con 20 sentadillas, 10 planchas y 10 movimientos de cabeza por Felix Castro</p>
+      <footer className="p-4 pb-10 pt-20 max-w-[1200] mx-auto flex justify-between items-center">
+        <Link href={"https://github.com/FelixGonzalo/clean-body"} target="_blank" className="hover:scale-110 duration-200">
+          <GithubIcon />
+        </Link>
+        <p className="text-sm text-gray-300">
+          Built by <Link href={"https://github.com/FelixGonzalo"} target="_blank" className="hover:text-blue-200">Felix Castro</Link>
+        </p>
       </footer>
     </>
   );
