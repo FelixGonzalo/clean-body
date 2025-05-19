@@ -194,7 +194,7 @@ export default function Profiles() {
         <h1 className="text-2xl">{user?.fullName || ""}</h1>
       </div>
       {GetUserChallenges.loading ? (
-        <div className="flex justify-start h-20">
+        <div className="flex justify-center h-20">
           <Loader />
         </div>
       ) : (
