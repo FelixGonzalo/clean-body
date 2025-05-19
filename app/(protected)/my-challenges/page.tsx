@@ -1,19 +1,17 @@
 'use client';
 
-import { Badge } from "@/components/Badge";
 import { Loader } from "@/components/Loader";
 import { useSupabase } from "@/lib/supabase-provider";
 import { IDailyChallenge, IUserChallenge } from "@/types/IChallenge";
-import { formatDate } from "@/utils/formatDate";
 import { useSession } from "@clerk/nextjs"
 import { useEffect, useState } from "react";
 
-import { Button, ConfirmButton } from "@/components/Button";
-import { onShare } from "@/utils/onShare";
 import { TodayChallenges } from "@/components/TodayChallenges";
 import { Avatar } from "@/components/Avatar";
 import { ProgressChart } from "@/components/ProgressChart";
 import { createLastWeekObject, createWeekObject } from "@/utils/createWeekObject";
+import { LastChallenges } from "@/components/LastChallenges";
+import { ShareProgressButton } from "@/components/ShareProgressButon";
 
 const useGetTodayChallenges = () => {
   const { supabase } = useSupabase()
@@ -54,11 +52,12 @@ const useGetUserChallenges = () => {
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<IUserChallenge[]>([])
 
-  const handle = async () => {
+  const handle = async ({userId}: {userId: string}) => {
     if (!supabase) return;
     setLoading(true)
     const { data, error } = await supabase.from('user_challenge_progress')
       .select('id, created_at, challenges(id, title, category, description, timer)')
+      .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(20);
 
@@ -109,9 +108,12 @@ export default function Profiles() {
 
   useEffect(() => {
     GetTodayChallenges.handle()
-    GetUserChallenges.handle()
   }, [])
 
+  useEffect(() => {
+    if (!user) return
+    GetUserChallenges.handle({userId: user.id})
+  }, [user])
 
   const userTodayChallenges = GetUserChallenges.data?.filter(obj => {
     return obj.created_at.substring(0, 10) === todayStr
@@ -131,9 +133,7 @@ export default function Profiles() {
       ) : (
         <div className="flex flex-col gap-10 mt-4">
           <div className="flex gap-2 justify-center">
-            <Button onClick={() => { }}>
-              Compartir mi progreso
-            </Button>
+            <ShareProgressButton user={user} />
           </div>
           <ProgressChart thisWeekCount={thisWeekCount} lastWeekCount={lastWeekCount} />
           {GetTodayChallenges.loading ? (
@@ -146,49 +146,9 @@ export default function Profiles() {
               <TodayChallenges challenges={pendingChallenges} isMainDesign={false} />
             </div>
           ) : null}
-          <div>
-            <h2 className="mb-4 text-gray-500 font-bold ">Últimos retos completados</h2>
-            <div className="flex flex-col gap-4">
-              {GetUserChallenges.data?.slice(0, 10)?.map(obj => <ChallengeCard userChallenge={obj} todayStr={todayStr} />)}
-            </div>
-          </div>
+          <LastChallenges userChallenges={GetUserChallenges.data} todayStr={todayStr} />
         </div>
       )}
     </main>
-  )
-}
-
-const ChallengeCard = ({ userChallenge, todayStr}: { userChallenge: IUserChallenge, todayStr: string}) => {
-  const isToday = new Date(userChallenge.created_at).toISOString().substring(0, 10) === todayStr;
-  const [copied, setCopied] = useState(false);
-
-  const handleShare = () => {
-    const url = `${window.location.origin}/challenges/${userChallenge.challenge.id}`;
-    navigator.clipboard.writeText(url).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 3000);
-    });
-    onShare("Te desafío a que lo hagas", url); // opcional, si aún necesitas llamarlo
-  };
-
-  return (
-    <article key={userChallenge.id} className="border-l-2 border-gray-500 pl-4 py-1">
-      <h2>
-        {userChallenge.challenge?.title}
-      </h2>
-      <div className="mt-1 mb-3">
-        <Badge>
-          {userChallenge.challenge?.category}
-        </Badge>
-        <span className="ml-1 text-gray-500 inline-block rounded-sm text-sm lowercase">
-          {formatDate(userChallenge.created_at)}
-        </span>
-      </div>
-      {isToday && (
-        <ConfirmButton onClick={() => handleShare()}>
-          {copied ? "¡Link copiado! Compártelo" : "¡Desafía ahora!"}
-        </ConfirmButton>
-      )}
-    </article>
   )
 }

@@ -1,4 +1,5 @@
 import { Avatar } from "@/components/Avatar";
+import { LastChallenges } from "@/components/LastChallenges";
 import { ProgressChart } from "@/components/ProgressChart";
 import {TodayChallenges} from "@/components/TodayChallenges";
 import { getTodayChallenges } from "@/services/getTodayChallenges";
@@ -12,12 +13,11 @@ interface Props {
   };
 }
 
-export default async function Home({ params }: Props) {
+export default async function Dev({ params }: Props) {
   const { userId } = await params;
   const clerk = await clerkClient();
   const user = await clerk.users.getUser(userId);
-  const challenges = await getTodayChallenges()
-  const userChallenges = await getUserChallenges();
+  const userChallenges = await getUserChallenges({userId});
 
   const thisWeekObj = createWeekObject(new Date());
   const lastWeekObj = createLastWeekObject();
@@ -47,7 +47,9 @@ export default async function Home({ params }: Props) {
       <Avatar user={user} />
       <div className="flex flex-col gap-10 mt-4">
         <ProgressChart thisWeekCount={thisWeekCount} lastWeekCount={lastWeekCount} />
-        <TodayChallenges challenges={challenges} isMainDesign={false} />
+        {userChallenges.length > 0 && (
+          <LastChallenges userChallenges={userChallenges} />
+        )}
       </div>
     </main>
   );

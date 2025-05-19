@@ -10,6 +10,7 @@ import { Button, buttonStyle, ConfirmButton } from '@/components/Button';
 import { getRandomMessage } from '@/utils/getRandomMessage';
 import { TodayChallenges } from '@/components/TodayChallenges';
 import Link from 'next/link';
+import { ShareProgressButton } from '@/components/ShareProgressButon';
 
 const STEP = {
   INITIAL: 1,
@@ -22,7 +23,7 @@ const useGetUserTodayChallenges = () => {
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<IUserChallenge[]>([])
 
-  const handle = async ({session}: {session: any}) => {
+  const handle = async ({session, userId}: {session: any, userId: string}) => {
     const client = createSupabaseClient(session);
     setLoading(true)
 
@@ -32,6 +33,7 @@ const useGetUserTodayChallenges = () => {
 
     const { data, error } = await client.from('user_challenge_progress')
       .select('id, created_at, challenges(id, title, category, description, timer)')
+      .eq('user_id', userId)
       .gte('created_at', start)
       .lte('created_at', end)
 
@@ -94,7 +96,7 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
 
   useEffect(() => {
     if (!session) return;
-    GetUserChallenges.handle({session})
+    GetUserChallenges.handle({session, userId: session.user.id})
   }, [session])
 
   const onStart = async () => {
@@ -153,10 +155,7 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
           Has completado todos los retos de hoy. ¡Felicidades!
         </p>
         <div className='flex gap-4 justify-center mt-10'>
-          <ConfirmButton
-            onClick={onStart}
-            children="Compartir mi progreso"
-          />
+          <ShareProgressButton user={session?.user} isConfirmButton />
           <Link
             className={buttonStyle}
             href={"/my-challenges"}
