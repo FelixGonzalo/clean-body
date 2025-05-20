@@ -189,8 +189,7 @@ export const ChallengeOptions = ({ challenge, seasonalChallenges}: { challenge: 
     <div>
       <CountdownTimer
         ref={timerRef}
-        time={3}
-        // time={challenge?.timer || 60}
+        time={challenge?.timer || 60}
         onFinish={() => {
           setStep(STEP.SHOW_CONFIRM);
           localStorage.setItem("challenge", JSON.stringify(challenge));

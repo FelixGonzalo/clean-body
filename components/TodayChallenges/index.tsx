@@ -19,7 +19,7 @@ export const TodayChallenges = ({challenges = [], isMainDesign = true, userToday
               <Link key={c.id} href={`/challenges/${c.challenge.id}`} className={`relative ${index === 2 ? "col-span-2 row-span-2" : ""} shadow-xl group`}>
                 <article>
                   <img
-                    className={`w-full ${index === 2 ? "h-150" : "h-100"} object-cover rounded-lg bg-gray-900`}
+                    className={`w-full ${(index === 2 && isMainDesign) ? "h-150" : "h-100"} object-cover rounded-lg bg-gray-900`}
                     src={c?.challenge?.image || defaultImg}
                     alt={c.challenge.title}
                   />
