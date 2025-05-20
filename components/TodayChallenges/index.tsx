@@ -4,15 +4,15 @@ import { Badge, DisabledBadge } from "../Badge"
 
 export const TodayChallenges = ({challenges = [], isMainDesign = true, userTodayChallenges = []}: {challenges: IDailyChallenge[], isMainDesign?: boolean, userTodayChallenges?: IUserChallenge[]}) => {
 
-  const mainDesignContainer = isMainDesign ? "max-w-[1200] justify-center px-4 md:grid md:grid-cols-2" : "justify-center"
-  const mainDesign = isMainDesign ? "h-100 md:h-150" : "h-50"
+  const mainDesignContainer = isMainDesign ? "max-w-[900] justify-center px-4 md:grid md:grid-cols-2" : "justify-center"
+  const mainDesign = isMainDesign ? "h-100 md:h-100" : "h-50"
 
   return (
     <section>
       {challenges.length === 0 ? (
         <p className="text-center">Estamos eligiendo los retos de hoy...</p>
       ) : (
-        <div className={`${mainDesignContainer} mx-auto flex flex-wrap gap-4`}>
+        <div className={`${mainDesignContainer} mx-auto flex flex-wrap gap-4 lg:p-0`}>
           {challenges.map((c, index) => {
             const isConfirmed = userTodayChallenges.find(obj => obj.challenge.id === c.challenge.id)
             return (
