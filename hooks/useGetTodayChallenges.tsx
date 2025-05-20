@@ -7,7 +7,7 @@ export const useGetTodayChallenges = () => {
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<IDailyChallenge[]>([])
 
-  const handle = async ({session}: {session: any}) => {
+  const handle = async ({session}: {session?: any}) => {
     const client = createSupabaseClient(session);
 
     setLoading(true)

@@ -57,12 +57,12 @@ export const ChallengeOptions = ({ challenge, seasonalChallenges}: { challenge: 
 
   useEffect(() => {
     messageRef.current = getRandomMessage(allConfirmedChallenges)
+    GetTodayChallenges.handle({})
   }, [])
 
   useEffect(() => {
     if (!session) return;
     GetUserChallenges.handle({session, userId: session.user.id})
-    GetTodayChallenges.handle({session})
   }, [session])
 
   const onStart = async () => {
@@ -91,7 +91,7 @@ export const ChallengeOptions = ({ challenge, seasonalChallenges}: { challenge: 
     setStep(STEP.START_TIMER);
   };
 
-  if (session && (GetUserChallenges.loading || GetTodayChallenges.loading)) {
+  if (GetUserChallenges.loading || GetTodayChallenges.loading) {
     return (
       <div className="flex justify-start h-20">
         <Loader />

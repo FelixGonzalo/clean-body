@@ -4,7 +4,7 @@ import { getDateRange } from "@/utils/getDateRange";
 import { useState } from "react";
 
 export const useGetUserTodayChallenges = () => {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [data, setData] = useState<IUserChallenge[]>([])
 
   const handle = async ({session, userId}: {session: any, userId: string}) => {
