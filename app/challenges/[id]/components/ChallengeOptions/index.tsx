@@ -20,7 +20,17 @@ const STEP = {
   SUCCESS: 4,
 };
 
+const getLastChallengeWithTimerCompleted = () => {
+  const localStorageChallenge = localStorage.getItem("challenge");
+  return localStorageChallenge ? JSON.parse(localStorageChallenge) : null;
+}
+
+const removeLastChallenge = () => {
+  localStorage.removeItem("challenge");
+}
+
 export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IChallenge, todayChallenges: IDailyChallenge[] }) => {
+  const challengeFromLocalStorage = getLastChallengeWithTimerCompleted()
 
   const clerk = useClerk();
   const { session } = useSession();
@@ -29,7 +39,7 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
 
   const timerRef = useRef<CountdownTimerHandle  | null>(null);
   const messageRef = useRef("");
-  const [step, setStep] = useState(STEP.INITIAL);
+  const [step, setStep] = useState(challengeFromLocalStorage?.id === challenge.id ? STEP.SHOW_CONFIRM : STEP.INITIAL);
 
   const isTodayChallenge = todayChallenges.find(obj => obj.challenge.id === challenge.id)
   const isConfirmedChallenge = GetUserChallenges.data.find(obj => obj.challenge.id === challenge.id)
@@ -48,6 +58,7 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
   }, [session])
 
   const onStart = async () => {
+    removeLastChallenge();
     timerRef?.current?.startTimer?.();
     setStep(STEP.START_TIMER);
   };
@@ -61,11 +72,13 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
       session,
       challenge_id: challenge.id,
     });
+    removeLastChallenge();
     setStep(STEP.SUCCESS);
     GetUserChallenges.handle({session, userId: session.user.id})
   };
 
   const onReset = () => {
+    removeLastChallenge();
     timerRef?.current?.resetTimer?.();
     setStep(STEP.START_TIMER);
   };
@@ -145,9 +158,11 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
     <div>
       <CountdownTimer
         ref={timerRef}
-        time={challenge?.timer}
+        time={3}
+        // time={challenge?.timer || 60}
         onFinish={() => {
           setStep(STEP.SHOW_CONFIRM);
+          localStorage.setItem("challenge", JSON.stringify(challenge));
         }}
       />
       <div className="mt-4">

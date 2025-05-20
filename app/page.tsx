@@ -112,7 +112,7 @@ export default async function Home() {
               <span className="text-2xl">💻</span>
               <div>
                 <h3 className="font-semibold text-lg text-balance mb-2">
-                  Hecho por y para programadores
+                  Hecho por y para developers
                 </h3>
                 <p className="text-gray-400 text-balance">
                   Sabemos lo que necesitas porque también pasamos horas en la PC.

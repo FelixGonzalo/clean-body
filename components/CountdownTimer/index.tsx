@@ -26,6 +26,7 @@ const CountdownTimer = ({ref, time = 60, onFinish} : {ref: Ref<CountdownTimerHan
   }
 
   const resetTimer = () => {
+    setStart(true)
     if (ref_timer?.current) {
       setTimeLeft(time)
     }
