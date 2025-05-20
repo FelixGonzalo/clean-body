@@ -28,7 +28,7 @@ export default async function Challenge({params}: Props) {
   if (!challenge) return redirect('/');
 
   return (
-    <main className='h-screen'>
+    <main className='min-h-screen'>
       <img
         className="w-full h-screen max-h-screen object-cover opacity-5 absolute -z-10"
         src="https://media.revistagq.com/photos/5d35929de887bb000828e8f3/16:9/w_1920,c_limit/GettyImages-982408932-(1).jpg"
