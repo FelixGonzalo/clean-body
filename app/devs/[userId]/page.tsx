@@ -52,7 +52,10 @@ export default async function Dev({params}: Props) {
 
   return (
     <main className="p-4 max-w-100 mx-auto mb-20">
-      <Avatar user={user} />
+      <Avatar user={{
+        fullName: user.fullName || "",
+        imageUrl: user.imageUrl,
+      }} />
       <div className="flex flex-col gap-10 mt-4">
         <ProgressChart thisWeekCount={thisWeekCount} lastWeekCount={lastWeekCount} />
         {userChallenges.length > 0 && (

@@ -62,7 +62,10 @@ export default function MyChallenges() {
 
   return (
     <main className="p-4 max-w-100 mx-auto mb-20">
-      <Avatar user={user} />
+      <Avatar user={{
+        fullName: user?.fullName || "",
+        imageUrl: user?.imageUrl
+      }} />
       {GetUserChallenges.loading ? (
         <div className="flex justify-center h-20">
           <Loader />
