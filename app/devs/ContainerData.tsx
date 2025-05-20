@@ -8,7 +8,7 @@ import { useSession } from "@clerk/nextjs";
 import { useEffect } from "react";
 
 // Ya no hay tiempo para ordenar código zZz
-export const ContainerData = () => {
+export const ContainerData = ({userId}: {userId: string}) => {
   const { session } = useSession()
 
   const GetUserChallenges = useGetUserChallenges()
@@ -37,10 +37,7 @@ export const ContainerData = () => {
     .map(([_, count]) => count);
 
   useEffect(() => {
-    if (!session || !session?.user) return
-    const user = session?.user
-
-    GetUserChallenges.handle({session, userId: user.id})
+    GetUserChallenges.handle({session, userId})
   }, [session])
 
 

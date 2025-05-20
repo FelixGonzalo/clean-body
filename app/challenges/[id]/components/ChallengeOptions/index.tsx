@@ -1,6 +1,6 @@
 'use client';
 
-import { IChallenge, IDailyChallenge } from '@/types/IChallenge';
+import { IChallenge } from '@/types/IChallenge';
 import { useClerk, useSession } from '@clerk/nextjs';
 import CountdownTimer, { CountdownTimerHandle } from '../../../../../components/CountdownTimer';
 import { useEffect, useRef, useState } from 'react';

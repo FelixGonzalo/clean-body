@@ -29,7 +29,7 @@ export default async function Dev({params}: Props) {
         fullName: user.fullName || "",
         imageUrl: user.imageUrl,
       }} />
-      <ContainerData />
+      <ContainerData userId={userId} />
     </main>
   );
 }
