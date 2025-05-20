@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase-server'
 export async function getSeasonalChallenges(): Promise<IChallenge[]>  {
   const supabase = await createClient()
   const { data: challenges, error } = await supabase.from('seasonal-challenges')
-    .select('id, created_at, challenges(id, title, category, description, timer)')
+    .select('id, created_at, challenges(id, title, category, description, timer, image)')
 
   if (error) {
     console.error('Error fetching challenges:', error)

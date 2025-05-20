@@ -14,6 +14,7 @@ import { useConfirmChallenge } from '@/hooks/useConfirmChallenge';
 import { useGetUserTodayChallenges } from '@/hooks/useGetUserTodayChallenges';
 import { useGetTodayChallenges } from '@/hooks/useGetTodayChallenges';
 import { Challenges } from '@/components/Challenges';
+import { defaultImg } from '@/utils/default';
 
 const STEP = {
   INITIAL: 1,
@@ -113,7 +114,7 @@ export const ChallengeOptions = ({ challenge, seasonalChallenges}: { challenge: 
     )
   }
 
-  if ((allConfirmedDailyChallenges && !isSeasonalChallenge) || allConfirmedChallenges) {
+  if (allConfirmedChallenges) {
     return (
       <div className='text-center mt-20 max-w-200 mx-auto'>
         <p className='text-5xl mt-4 mb-10 text-red-400 text-balance'>
@@ -225,6 +226,11 @@ export const ChallengeOptions = ({ challenge, seasonalChallenges}: { challenge: 
           </>
         )}
       </div>
+      <img
+          className="w-full md:max-w-[300] object-cover my-4 rounded-2xl"
+          src={challenge?.image || defaultImg}
+          alt={challenge.title}
+      />
     </div>
   );
 };

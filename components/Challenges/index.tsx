@@ -1,6 +1,7 @@
 import { IChallenge, IUserChallenge } from '@/types/IChallenge';
 import Link from 'next/link';
 import { Badge, DisabledBadge } from '../Badge';
+import { defaultImg } from '@/utils/default';
 
 export const Challenges = ({
   challenges = [],
@@ -12,9 +13,8 @@ export const Challenges = ({
   userTodayChallenges?: IUserChallenge[];
 }) => {
   const mainDesignContainer = isMainDesign
-    ? 'max-w-[900] justify-center px-4 md:grid md:grid-cols-2'
+    ? 'max-w-[850] justify-center px-4 md:grid md:grid-cols-2'
     : 'justify-center';
-  const mainDesign = isMainDesign ? 'h-100 md:h-100' : 'h-50';
 
   return (
     <section>
@@ -39,9 +39,9 @@ export const Challenges = ({
               >
                 <article>
                   <img
-                    className={`w-full ${mainDesign} object-cover rounded-lg bg-gray-900`}
-                    src="https://media.revistagq.com/photos/5d35929de887bb000828e8f3/16:9/w_1920,c_limit/GettyImages-982408932-(1).jpg"
-                    alt=""
+                    className={`w-full h-100 object-cover rounded-lg bg-gray-900`}
+                    src={challenge?.image || defaultImg}
+                    alt={challenge.title}
                   />
                   <div
                     className={`absolute top-0 left-0 w-full h-full rounded-lg opacity-50 animate-background-shine duration-700 group-hover:opacity-30 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%]`}

@@ -5,7 +5,7 @@ export async function getUserChallenges({userId}: {userId: string}): Promise<IUs
   const supabase = await createClient()
 
   const { data, error } = await supabase.from('user_challenge_progress')
-    .select('id, created_at, challenges(id, title, category, description, timer)')
+    .select('id, created_at, challenges(id, title, category, description, timer, image)')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
     .limit(20);

@@ -29,7 +29,7 @@ export default async function Home() {
             Hazle un commit a tu bienestar con retos diarios
           </p>
         </section>
-        <section className='max-w-[900] mx-auto'>
+        <section className='max-w-[850] mx-auto'>
           <h2 className="m-4 block text-gray-400 mt-2 text-xl lg:ml-0">Retos de temporada</h2>
           <Challenges challenges={seasonalChallenges} />
         </section>
@@ -123,7 +123,7 @@ export default async function Home() {
             </li>
           </ul>
         </section>
-        <section className="max-w-[900] mx-auto p-4 my-10 md:my-10 lg:my-20 lg:mt-40">
+        <section className="max-w-[850] mx-auto p-4 my-10 md:my-10 lg:my-20 lg:mt-40">
           <h2 className="text-center text-balance text-4xl mb-10 lg:mb-20">
             Revisa tu progreso semanal y comparte tus logros
           </h2>

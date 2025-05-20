@@ -14,7 +14,7 @@ export const useGetUserTodayChallenges = () => {
 
 
     const { data, error } = await client.from('user_challenge_progress')
-      .select('id, created_at, challenges(id, title, category, description, timer)')
+      .select('id, created_at, challenges(id, title, category, description, timer, image)')
       .eq('user_id', userId)
       .gte('created_at', start)
       .lte('created_at', end)

@@ -15,7 +15,7 @@ export const useGetTodayChallenges = () => {
 
     const { data, error } = await supabase
       .from('daily_challenges')
-      .select('id, created_at, challenges(id, title, category, description, timer)')
+      .select('id, created_at, challenges(id, title, category, description, timer, image)')
       .gte('created_at', start)
       .lte('created_at', end)
       .limit(3);

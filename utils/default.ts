@@ -1,0 +1,1 @@
+export const defaultImg = "/default-challenge-2.webp"

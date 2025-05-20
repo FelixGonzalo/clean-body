@@ -13,6 +13,7 @@ export interface IChallenge {
   category: TChallengeCategory
   description: string
   timer: number
+  image?: string
 }
 
 export interface IDailyChallenge {

@@ -4,6 +4,7 @@ import { getChallenge } from '@/services/getChallenge';
 import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
 import { getSeasonalChallenges } from '@/services/getSeasonalChallenges';
+import { defaultImg } from '@/utils/default';
 
 type Props = {params: Promise<{ id: string }>}
 
@@ -37,8 +38,8 @@ export default async function Challenge({params}: Props) {
     <main className='min-h-screen'>
       <img
         className="w-full h-screen max-h-screen object-cover opacity-5 absolute -z-10"
-        src="https://media.revistagq.com/photos/5d35929de887bb000828e8f3/16:9/w_1920,c_limit/GettyImages-982408932-(1).jpg"
-        alt=""
+        src={challenge?.image || defaultImg}
+        alt={challenge.title}
       />
       <div className='p-4 pt-10 lg:p-10'>
         <h1 className='text-5xl'>
