@@ -13,6 +13,7 @@ import { ProgressShareButton } from '@/components/ProgressShareButton';
 import { useConfirmChallenge } from '@/hooks/useConfirmChallenge';
 import { useGetUserTodayChallenges } from '@/hooks/useGetUserTodayChallenges';
 import { useGetTodayChallenges } from '@/hooks/useGetTodayChallenges';
+import { Challenges } from '@/components/Challenges';
 
 const STEP = {
   INITIAL: 1,
@@ -30,7 +31,7 @@ const removeLastChallenge = () => {
   localStorage.removeItem("challenge");
 }
 
-export const ChallengeOptions = ({ challenge}: { challenge: IChallenge}) => {
+export const ChallengeOptions = ({ challenge, seasonalChallenges}: { challenge: IChallenge, seasonalChallenges: IChallenge[]}) => {
   const challengeFromLocalStorage = getLastChallengeWithTimerCompleted()
   const GetTodayChallenges = useGetTodayChallenges()
 
@@ -47,8 +48,11 @@ export const ChallengeOptions = ({ challenge}: { challenge: IChallenge}) => {
   const isConfirmedChallenge = GetUserChallenges.data.find(obj => obj.challenge.id === challenge.id)
 
   const userChallengeUuids = GetUserChallenges.data.map(obj => obj.challenge.id)
-  const allConfirmedChallenges = GetTodayChallenges.data.every(obj => userChallengeUuids.includes(obj.challenge.id))
+  const allConfirmedDailyChallenges = GetTodayChallenges.data.every(obj => userChallengeUuids.includes(obj.challenge.id));
+  const allConfirmedSeasonalChallenges = seasonalChallenges.every(obj => userChallengeUuids.includes(obj.id))
+  const allConfirmedChallenges = allConfirmedDailyChallenges && allConfirmedSeasonalChallenges;
 
+  const isSeasonalChallenge = seasonalChallenges.find(obj => obj.id === challenge.id);
 
   useEffect(() => {
     messageRef.current = getRandomMessage(allConfirmedChallenges)
@@ -94,10 +98,10 @@ export const ChallengeOptions = ({ challenge}: { challenge: IChallenge}) => {
     )
   }
 
-  if (!isTodayChallenge) {
+  if (!isTodayChallenge && !isSeasonalChallenge) {
     return (
-      <div className='text-center mt-20'>
-        <p className='text-5xl mt-4 mb-10 text-red-400'>
+      <div className='mt-20'>
+        <p className='text-center text-5xl mt-4 mb-10 text-red-400'>
           Los retos de hoy
         </p>
         <TodayChallenges
@@ -109,7 +113,7 @@ export const ChallengeOptions = ({ challenge}: { challenge: IChallenge}) => {
     )
   }
 
-  if (allConfirmedChallenges) {
+  if ((allConfirmedDailyChallenges && !isSeasonalChallenge) || allConfirmedChallenges) {
     return (
       <div className='text-center mt-20 max-w-200 mx-auto'>
         <p className='text-5xl mt-4 mb-10 text-red-400 text-balance'>
@@ -130,11 +134,34 @@ export const ChallengeOptions = ({ challenge}: { challenge: IChallenge}) => {
     )
   }
 
-  if (isConfirmedChallenge) {
+  if (isConfirmedChallenge && !isSeasonalChallenge) {
     return (
       <div className='mt-20'>
         <p className='text-center text-5xl mt-4 mb-10 text-red-400'>
-          Reto completado
+          Reto del día completado
+        </p>
+        <TodayChallenges
+          challenges={GetTodayChallenges.data}
+          userTodayChallenges={GetUserChallenges.data}
+          isMainDesign={false}
+        />
+        <p className='text-center text-4xl mt-4 mb-10 text-red-400 mt-10'>
+          Retos de temporada
+        </p>
+        <Challenges challenges={seasonalChallenges} userTodayChallenges={GetUserChallenges.data} isMainDesign={false} />
+      </div>
+    )
+  }
+
+  if (isConfirmedChallenge && isSeasonalChallenge) {
+    return (
+      <div className='mt-20'>
+        <p className='text-center text-5xl mt-4 mb-10 text-red-400'>
+          Reto de temporada completado
+        </p>
+        <Challenges challenges={seasonalChallenges} userTodayChallenges={GetUserChallenges.data} isMainDesign={false} />
+        <p className='text-center text-4xl mt-4 mb-10 text-red-400 mt-10'>
+          Retos del día
         </p>
         <TodayChallenges
           challenges={GetTodayChallenges.data}

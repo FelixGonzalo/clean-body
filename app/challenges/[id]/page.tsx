@@ -1,8 +1,9 @@
-import { Badge } from '@/components/Badge';
+import { Badge, DisabledBadge } from '@/components/Badge';
 import { ChallengeOptions } from '@/app/challenges/[id]/components/ChallengeOptions';
 import { getChallenge } from '@/services/getChallenge';
 import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
+import { getSeasonalChallenges } from '@/services/getSeasonalChallenges';
 
 type Props = {params: Promise<{ id: string }>}
 
@@ -23,9 +24,14 @@ export default async function Challenge({params}: Props) {
   const { id } = await params;
   if (!id) return redirect('/');
 
-  const challenge = await getChallenge({ id });
+  const [challenge, seasonalChallenges] = await Promise.all([
+    getChallenge({ id }),
+    getSeasonalChallenges(),
+  ]);
 
   if (!challenge) return redirect('/');
+
+  const isSeasonalChallenge = seasonalChallenges.find(obj => obj.id === challenge.id);
 
   return (
     <main className='min-h-screen'>
@@ -42,12 +48,18 @@ export default async function Challenge({params}: Props) {
           <Badge>
             {challenge.category}
           </Badge>
+          {isSeasonalChallenge && (
+            <DisabledBadge>
+              Reto de temporada
+            </DisabledBadge>
+          )}
         </div>
         <p className='text-balance my-4 text-gray-300'>
           {challenge.description}
         </p>
         <ChallengeOptions
           challenge={challenge}
+          seasonalChallenges={seasonalChallenges}
         />
       </div>
     </main>
