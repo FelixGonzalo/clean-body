@@ -1,14 +1,13 @@
 import { TodayChallenges } from '@/components/TodayChallenges';
 import { getTodayChallenges } from '@/services/getTodayChallenges';
 import Link from 'next/link';
-import { GithubIcon } from '@/components/icons/github-icon';
 import { ProgressChart } from '@/components/ProgressChart';
 import { Avatar } from '@/components/Avatar';
 import { confirmButtonStyle } from '@/components/Button';
 
 function formatThisWeekData(array: number[]) {
   const hoy = new Date();
-  let dia = hoy.getDay();
+  let dia = hoy.getUTCDay();
   dia = dia === 0 ? 6 : dia - 1;
 
   return array.slice(0, dia + 1);

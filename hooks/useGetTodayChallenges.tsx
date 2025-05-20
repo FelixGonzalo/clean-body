@@ -1,5 +1,6 @@
 import { useSupabase } from "@/lib/supabase-provider"
 import { IDailyChallenge } from "@/types/IChallenge"
+import { getDateRange } from "@/utils/getDateRange"
 import { useState } from "react"
 
 export const useGetTodayChallenges = () => {
@@ -10,9 +11,8 @@ export const useGetTodayChallenges = () => {
   const handle = async () => {
     if (!supabase) return;
     setLoading(true)
-    const today = new Date();
-    const start = new Date(today.setHours(0, 0, 0, 0)).toISOString();
-    const end = new Date(today.setHours(23, 59, 59, 999)).toISOString();
+    const {start, end} = getDateRange()
+
 
     const { data, error } = await supabase
       .from('daily_challenges')

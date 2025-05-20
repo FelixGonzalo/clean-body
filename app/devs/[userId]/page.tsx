@@ -3,6 +3,7 @@ import { LastChallenges } from "@/components/LastChallenges";
 import { ProgressChart } from "@/components/ProgressChart";
 import { getUserChallenges } from "@/services/getUserChallenges";
 import { createLastWeekObject, createWeekObject } from "@/utils/createWeekObject";
+import { toUTCDateYYYYMMDD } from "@/utils/toUTCDateYYYMMDD";
 import { clerkClient} from "@clerk/nextjs/server";
 import { Metadata } from "next";
 
@@ -31,7 +32,8 @@ export default async function Dev({params}: Props) {
   const lastWeekObj = createLastWeekObject();
 
   userChallenges?.forEach(item => {
-    const date = new Date(item.created_at).toISOString().substring(0, 10);
+    const date = toUTCDateYYYYMMDD(item.created_at)
+
     if (thisWeekObj.hasOwnProperty(date)) {
       thisWeekObj[date] += 1;
     }
@@ -40,7 +42,8 @@ export default async function Dev({params}: Props) {
     }
   });
 
-  const todayStr = new Date().toISOString().substring(0, 10);
+  const todayUTC = new Date();
+  const todayStr = `${todayUTC.getUTCFullYear()}-${String(todayUTC.getUTCMonth() + 1).padStart(2, '0')}-${String(todayUTC.getUTCDate()).padStart(2, '0')}`;
 
   const thisWeekCount = Object.entries(thisWeekObj)
     .filter(([date]) => date <= todayStr)
