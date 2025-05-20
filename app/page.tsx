@@ -129,7 +129,7 @@ export default async function Home() {
           <div className="p-4 max-w-100 mx-auto">
             <Avatar user={{
               fullName: 'Fekilo',
-              imageUrl: 'https://avatars.githubusercontent.com/u/102646648?v=4',
+              imageUrl: '/fekilo-user-circle.png',
             }} />
             <div className="flex gap-2 justify-center  my-4">
               <Link href={`/challenges/${challenges?.[0]?.challenge.id}`} className={confirmButtonStyle}>
@@ -137,30 +137,11 @@ export default async function Home() {
               </Link>
             </div>
             <div className="flex flex-col gap-10 mt-4">
-              <ProgressChart thisWeekCount={formatThisWeekData([2,2,3,1,4,1,2])} lastWeekCount={[1,3,2,2,3,3,0]} />
+              <ProgressChart thisWeekCount={formatThisWeekData([2,2,3,1,4,1,2])} lastWeekCount={[0,2,3,2,3,3,2]} />
             </div>
           </div>
         </section>
       </main>
-      <footer className="p-4 pb-10 pt-20 max-w-[900] mx-auto flex justify-between items-center lg:px-0">
-        <Link
-          href={'https://github.com/FelixGonzalo/clean-body'}
-          target="_blank"
-          className="hover:scale-110 duration-200"
-        >
-          <GithubIcon />
-        </Link>
-        <p className="text-sm text-gray-300">
-          Built by{' '}
-          <Link
-            href={'https://github.com/FelixGonzalo'}
-            target="_blank"
-            className="hover:text-blue-200"
-          >
-            Felix Castro
-          </Link>
-        </p>
-      </footer>
     </>
   );
 }

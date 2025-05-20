@@ -11,6 +11,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { dark } from '@clerk/themes'
 import Link from 'next/link'
+import { GithubIcon } from '@/components/icons/github-icon'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -63,8 +64,10 @@ export default function RootLayout({
     >
       <html lang="es">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
-            <Link href={"/"} className="font-bold mr-auto ml-0">Clean Body</Link>
+          <header className="flex justify-end items-center p-4 gap-4 lg:px-10">
+            <Link href={"/"} className="mr-auto ml-0">
+              <img src="/clean-body-1.svg" alt="Logo de Clean Body" width={150} />
+            </Link>
             <SignedOut>
               <SignInButton />
               <SignUpButton />
@@ -75,6 +78,25 @@ export default function RootLayout({
             </SignedIn>
           </header>
           {children}
+          <footer className="p-4 flex justify-between items-center lg:px-10">
+            <Link
+              href={'https://github.com/FelixGonzalo/clean-body'}
+              target="_blank"
+              className="hover:scale-110 duration-200"
+            >
+              <GithubIcon />
+            </Link>
+            <p className="text-sm text-gray-300">
+              Built by{' '}
+              <Link
+                href={'https://github.com/FelixGonzalo'}
+                target="_blank"
+                className="hover:text-blue-200"
+              >
+                Felix Castro
+              </Link>
+            </p>
+          </footer>
         </body>
       </html>
     </ClerkProvider>
