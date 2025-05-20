@@ -12,8 +12,6 @@ export const DailyChallenges = () => {
     GetTodayChallenges.handle({});
   }, []);
 
-  console.log('GetTodayChallenges', GetTodayChallenges.data);
-
   return (
     <>
       {GetTodayChallenges.loading ? (

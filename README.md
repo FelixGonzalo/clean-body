@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💪 Descripción
 
-## Getting Started
+[cleanbody.dev](https://www.cleanbody.dev/) es una web diseñada para mejorar la salud de programadores o profesionales tech que pasan muchas horas frente a la computadora.
 
-First, run the development server:
+![Portada del proyecto](./proyect-hero.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🛠 Tecnologías utilizadas
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Clerk**
+- **Supabase**
+- **Next.js**
+- **TailwindCSS**
+- **Chart.js**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧩 Características principales
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Home con resumen del proyecto
+- Inicio de sesión con Clerk
+- Retos diarios
+- Marcar retos como completados
+- Ver progreso semanal
+- Perfil compartible con tus estadísticas
 
-## Learn More
+## Me gustaría agregar
 
-To learn more about Next.js, take a look at the following resources:
+- Insignias por retos cumplidos y logros especiales
+- Sistema de notificaciones push para los retos diarios
+- Personalización de retos según preferencias del usuario
+- Desafíos grupales
+- Seguimiento de desafío
+- Agregar alertas por inactividad
+- Gráficos de avance por tipos de retos
+- URL amigable para perfil compartible
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧪 Cómo se usó Clerk
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Registro e inicio de sesión
+- Mostrar y editar el perfil del usuario
+- Proteger la ruta para dashboard del usuario
+- Gestionar la sesión y obtener el userId para relacionar los retos con cada usuario en Supabase
+- Guardar el avance de los retos completados del usuario
 
-## Deploy on Vercel
+## Nota final
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Gracias al gran [Midudev](https://github.com/midudev) por todo el aporte a la comunidad y hacer posible esta [Hackatón](https://github.com/midudev/hackaton-clerk-2025).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Por fin pude participar en mi primera Hackatón y con un proyecto que quería iniciar hace mucho 🚀
+
+![Iniciando un reto](./demo-reto.gif)
