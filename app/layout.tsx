@@ -26,11 +26,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Clean Body',
   description: 'Hazle un commit a tu bienestar con nuestros retos diarios',
-  metadataBase: new URL('https://clean-body.dev'),
+  metadataBase: new URL('https://cleanbody.dev'),
   openGraph: {
     title: 'Clean Body',
     description: 'Hazle un commit a tu bienestar con nuestros retos diarios',
-    url: 'https://clean-body.dev',
+    url: 'https://cleanbody.dev',
     siteName: 'Clean Body',
     images: [
       {
