@@ -132,7 +132,7 @@ export default async function Home() {
               imageUrl: 'https://avatars.githubusercontent.com/u/102646648?v=4',
             }} />
             <div className="flex gap-2 justify-center  my-4">
-              <Link href={`/challenges/${challenges?.[0]?.id}`} className={confirmButtonStyle}>
+              <Link href={`/challenges/${challenges?.[0]?.challenge.id}`} className={confirmButtonStyle}>
                 Iniciar ahora
               </Link>
             </div>
