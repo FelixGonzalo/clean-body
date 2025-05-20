@@ -90,10 +90,10 @@ export default async function Home() {
               <span className="text-2xl">📆</span>
               <div>
                 <h3 className="font-semibold text-lg text-balance mb-2 text-red-300">
-                  Retos cada día
+                  5 Retos cada día
                 </h3>
                 <p className="text-gray-400 text-balance">
-                  2 retos por temporada siempre activos y 3 retos diarios.
+                  2 retos de temporada y 3 retos del día.
                   Lo puedes hacer durante tus pausas o al final del día. ¡Tú eliges!
                 </p>
               </div>
