@@ -1,9 +1,10 @@
-import { TodayChallenges } from '@/components/TodayChallenges';
-import { getTodayChallenges } from '@/services/getTodayChallenges';
 import Link from 'next/link';
 import { ProgressChart } from '@/components/ProgressChart';
 import { Avatar } from '@/components/Avatar';
 import { confirmButtonStyle } from '@/components/Button';
+import { getSeasonalChallenges } from '@/services/getSeasonalChallenges';
+import { Challenges } from '@/components/Challenges';
+import { DailyChallenges } from '@/components/DailyChallenges';
 
 function formatThisWeekData(array: number[]) {
   const hoy = new Date();
@@ -14,13 +15,13 @@ function formatThisWeekData(array: number[]) {
 }
 
 export default async function Home() {
-  const challenges = await getTodayChallenges();
+  const seasonalChallenges = await getSeasonalChallenges();
 
   return (
     <>
       <main className="min-h-screen">
         <section className="p-4 text-center mb-4 md:my-10 md:mb-14 lg:my-20 lg:mb-24">
-          <h1 className="text-5xl my-4">Cuida tu framework más importante</h1>
+          <h1 className="text-5xl my-4">Cuida tu Framework más importante</h1>
           <p className="font-bold text-blue-400">
             ¿Horas picando código sin moverte?
           </p>
@@ -29,8 +30,8 @@ export default async function Home() {
           </p>
         </section>
         <section className='max-w-[900] mx-auto'>
-          <h2 className="m-4 block text-gray-400 mt-2 text-xl lg:ml-0">Retos del día</h2>
-          <TodayChallenges challenges={challenges} />
+          <h2 className="m-4 block text-gray-400 mt-2 text-xl lg:ml-0">Retos de temporada</h2>
+          <Challenges challenges={seasonalChallenges} />
         </section>
         <section className="p-4 my-10 md:my-10 lg:p-0 lg:my-20 lg:mt-40 max-w-[720] mx-auto">
           <h2 className="text-center text-balance text-4xl lg:mb-20">
@@ -88,10 +89,11 @@ export default async function Home() {
             <li className="flex gap-2">
               <span className="text-2xl">📆</span>
               <div>
-                <h3 className="font-semibold text-lg text-balance mb-2">
-                  Tres retos cada día
+                <h3 className="font-semibold text-lg text-balance mb-2 text-red-300">
+                  Retos cada día
                 </h3>
                 <p className="text-gray-400 text-balance">
+                  2 retos por temporada siempre activos y 3 retos diarios.
                   Lo puedes hacer durante tus pausas o al final del día. ¡Tú eliges!
                 </p>
               </div>
@@ -131,7 +133,7 @@ export default async function Home() {
               imageUrl: '/fekilo-user-circle.png',
             }} />
             <div className="flex gap-2 justify-center  my-4">
-              <Link href={`/challenges/${challenges?.[0]?.challenge.id}`} className={confirmButtonStyle}>
+              <Link href={`/challenges/${seasonalChallenges?.[0]?.id}`} className={confirmButtonStyle}>
                 Iniciar ahora
               </Link>
             </div>
@@ -139,6 +141,12 @@ export default async function Home() {
               <ProgressChart thisWeekCount={formatThisWeekData([2,2,3,1,4,1,2])} lastWeekCount={[0,2,3,2,3,3,2]} />
             </div>
           </div>
+        </section>
+        <section className='p-4 my-10 md:my-10 lg:my-20'>
+          <h2 className="text-center text-balance text-4xl mb-10 lg:mb-20">
+            Retos del día
+          </h2>
+          <DailyChallenges />
         </section>
       </main>
     </>

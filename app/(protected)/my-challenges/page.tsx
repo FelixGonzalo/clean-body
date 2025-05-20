@@ -10,9 +10,10 @@ import { ProgressChart } from "@/components/ProgressChart";
 import { createLastWeekObject, createWeekObject } from "@/utils/createWeekObject";
 import { LastChallenges } from "@/components/LastChallenges";
 import { ProgressShareButton } from "@/components/ProgressShareButton";
-import { useGetTodayChallenges } from "@/hooks/useGetTodayChallenges";
-import { useGetUserChallenges } from "@/hooks/useGetUserChallenges";
-import { toUTCDateYYYYMMDD } from "@/utils/toUTCDateYYYMMDD";
+
+import { toDateYYYYMMDD } from "@/utils/toDateYYYMMDD";
+import { useGetUserChallenges } from "../hooks/useGetUserChallenges";
+import { useGetTodayChallenges } from "../hooks/useGetTodayChallenges";
 
 export default function MyChallenges() {
   const { session } = useSession()
@@ -25,7 +26,7 @@ export default function MyChallenges() {
   const lastWeekObj = createLastWeekObject();
 
   GetUserChallenges.data?.forEach(item => {
-    const date = toUTCDateYYYYMMDD(item.created_at)
+    const date = toDateYYYYMMDD(item.created_at)
     if (thisWeekObj.hasOwnProperty(date)) {
       thisWeekObj[date] += 1;
     }
@@ -34,8 +35,7 @@ export default function MyChallenges() {
     }
   });
 
-  const todayUTC = new Date();
-  const todayStr = `${todayUTC.getUTCFullYear()}-${String(todayUTC.getUTCMonth() + 1).padStart(2, '0')}-${String(todayUTC.getUTCDate()).padStart(2, '0')}`;
+  const todayStr = new Date().toISOString().substring(0, 10);
 
   const thisWeekCount = Object.entries(thisWeekObj)
     .filter(([date]) => date <= todayStr)

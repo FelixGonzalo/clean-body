@@ -1,17 +1,16 @@
-import { createSupabaseClient } from "@/lib/supabase-client"
+import { useSupabase } from "@/lib/supabase-provider"
 import { IUserChallenge } from "@/types/IChallenge"
 import { useState } from "react"
 
 export const useGetUserChallenges = () => {
+  const { supabase } = useSupabase()
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<IUserChallenge[]>([])
 
-  const handle = async ({session, userId}: {session: any, userId: string}) => {
-    const client = createSupabaseClient(session);
-
+  const handle = async ({userId}: {userId: string}) => {
+    if (!supabase) return;
     setLoading(true)
-
-    const { data, error } = await client.from('user_challenge_progress')
+    const { data, error } = await supabase.from('user_challenge_progress')
       .select('id, created_at, challenges(id, title, category, description, timer)')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })

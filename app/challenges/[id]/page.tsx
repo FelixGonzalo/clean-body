@@ -1,8 +1,7 @@
-import { Badge, DisabledBadge } from '@/components/Badge';
+import { Badge } from '@/components/Badge';
 import { ChallengeOptions } from '@/app/challenges/[id]/components/ChallengeOptions';
 import { getChallenge } from '@/services/getChallenge';
 import { redirect } from 'next/navigation';
-import { getTodayChallenges } from '@/services/getTodayChallenges';
 import { Metadata } from 'next';
 
 type Props = {params: Promise<{ id: string }>}
@@ -24,14 +23,9 @@ export default async function Challenge({params}: Props) {
   const { id } = await params;
   if (!id) return redirect('/');
 
-  const [challenge, todayChallenges] = await Promise.all([
-    getChallenge({ id }),
-    getTodayChallenges(),
-  ]);
+  const challenge = await getChallenge({ id });
 
   if (!challenge) return redirect('/');
-
-  const isTodayChallenge = todayChallenges.find(obj => obj.challenge.id === challenge.id)
 
   return (
     <main className='h-screen'>
@@ -45,11 +39,6 @@ export default async function Challenge({params}: Props) {
           {challenge.title}
         </h1>
         <div className='my-2 flex gap-2'>
-          {!isTodayChallenge && (
-            <DisabledBadge>
-              No disponible hoy
-            </DisabledBadge>
-          )}
           <Badge>
             {challenge.category}
           </Badge>
@@ -59,7 +48,6 @@ export default async function Challenge({params}: Props) {
         </p>
         <ChallengeOptions
           challenge={challenge}
-          todayChallenges={todayChallenges}
         />
       </div>
     </main>

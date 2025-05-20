@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { ProgressShareButton } from '@/components/ProgressShareButton';
 import { useConfirmChallenge } from '@/hooks/useConfirmChallenge';
 import { useGetUserTodayChallenges } from '@/hooks/useGetUserTodayChallenges';
+import { useGetTodayChallenges } from '@/hooks/useGetTodayChallenges';
 
 const STEP = {
   INITIAL: 1,
@@ -29,8 +30,9 @@ const removeLastChallenge = () => {
   localStorage.removeItem("challenge");
 }
 
-export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IChallenge, todayChallenges: IDailyChallenge[] }) => {
+export const ChallengeOptions = ({ challenge}: { challenge: IChallenge}) => {
   const challengeFromLocalStorage = getLastChallengeWithTimerCompleted()
+  const GetTodayChallenges = useGetTodayChallenges()
 
   const clerk = useClerk();
   const { session } = useSession();
@@ -41,11 +43,11 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
   const messageRef = useRef("");
   const [step, setStep] = useState(challengeFromLocalStorage?.id === challenge.id ? STEP.SHOW_CONFIRM : STEP.INITIAL);
 
-  const isTodayChallenge = todayChallenges.find(obj => obj.challenge.id === challenge.id)
+  const isTodayChallenge = GetTodayChallenges.data.find(obj => obj.challenge.id === challenge.id)
   const isConfirmedChallenge = GetUserChallenges.data.find(obj => obj.challenge.id === challenge.id)
 
   const userChallengeUuids = GetUserChallenges.data.map(obj => obj.challenge.id)
-  const allConfirmedChallenges = todayChallenges.every(obj => userChallengeUuids.includes(obj.challenge.id))
+  const allConfirmedChallenges = GetTodayChallenges.data.every(obj => userChallengeUuids.includes(obj.challenge.id))
 
 
   useEffect(() => {
@@ -55,6 +57,7 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
   useEffect(() => {
     if (!session) return;
     GetUserChallenges.handle({session, userId: session.user.id})
+    GetTodayChallenges.handle({session})
   }, [session])
 
   const onStart = async () => {
@@ -83,7 +86,7 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
     setStep(STEP.START_TIMER);
   };
 
-  if (session && GetUserChallenges.loading)  {
+  if (session && (GetUserChallenges.loading || GetTodayChallenges.loading)) {
     return (
       <div className="flex justify-start h-20">
         <Loader />
@@ -98,7 +101,7 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
           Los retos de hoy
         </p>
         <TodayChallenges
-          challenges={todayChallenges}
+          challenges={GetTodayChallenges.data}
           userTodayChallenges={GetUserChallenges.data}
           isMainDesign={false}
         />
@@ -134,7 +137,7 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
           Reto completado
         </p>
         <TodayChallenges
-          challenges={todayChallenges}
+          challenges={GetTodayChallenges.data}
           userTodayChallenges={GetUserChallenges.data}
           isMainDesign={false}
         />
@@ -146,7 +149,7 @@ export const ChallengeOptions = ({ challenge, todayChallenges }: { challenge: IC
     return (
       <div className='mt-20'>
         <TodayChallenges
-          challenges={todayChallenges}
+          challenges={GetTodayChallenges.data}
           userTodayChallenges={GetUserChallenges.data}
           isMainDesign={false}
         />

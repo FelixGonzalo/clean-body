@@ -1,19 +1,19 @@
-import { createSupabaseClient } from "@/lib/supabase-client"
+import { useSupabase } from "@/lib/supabase-provider"
 import { IDailyChallenge } from "@/types/IChallenge"
 import { getDateRange } from "@/utils/getDateRange"
 import { useState } from "react"
 
 export const useGetTodayChallenges = () => {
+  const { supabase } = useSupabase()
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<IDailyChallenge[]>([])
 
-  const handle = async ({session}: {session: any}) => {
-    const client = createSupabaseClient(session);
-
+  const handle = async () => {
+    if (!supabase) return;
     setLoading(true)
     const {start, end} = getDateRange()
 
-    const { data, error } = await client
+    const { data, error } = await supabase
       .from('daily_challenges')
       .select('id, created_at, challenges(id, title, category, description, timer)')
       .gte('created_at', start)

@@ -7,10 +7,10 @@ import { Badge } from "./Badge";
 import { ConfirmButton } from "./Button";
 import { formatDate } from "@/utils/formatDate";
 import Link from "next/link";
-import { toUTCDateYYYYMMDD } from "@/utils/toUTCDateYYYMMDD";
+import { toDateYYYYMMDD } from "@/utils/toDateYYYMMDD";
 
 export const ChallengeCard = ({ userChallenge, todayStr}: { userChallenge: IUserChallenge, todayStr?: string}) => {
-  const dateUTC = toUTCDateYYYYMMDD(userChallenge.created_at)
+  const dateUTC = toDateYYYYMMDD(userChallenge.created_at)
 
   const isToday = todayStr ? dateUTC === todayStr : false;
   const [copied, setCopied] = useState(false);

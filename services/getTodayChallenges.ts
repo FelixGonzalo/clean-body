@@ -1,10 +1,10 @@
 import { IDailyChallenge } from '@/types/IChallenge';
 import { createClient } from '@/lib/supabase-server';
-import { getDateRange } from '@/utils/getDateRange';
+import { getUTCDateRange } from '@/utils/getDateRange';
 
 export async function getTodayChallenges(): Promise<IDailyChallenge[]>  {
   const supabase = await createClient()
-  const {start, end} = getDateRange()
+  const {start, end} = getUTCDateRange()
 
   const { data, error } = await supabase
     .from('daily_challenges')
