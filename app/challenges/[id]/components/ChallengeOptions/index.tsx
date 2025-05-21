@@ -208,20 +208,18 @@ export const ChallengeOptions = ({ challenge, seasonalChallenges}: { challenge: 
                 children="Iniciar"
               />
             )}
-            <div className="flex gap-4">
-              {step === STEP.SHOW_CONFIRM && (
+            {(step === STEP.SHOW_CONFIRM || step === STEP.START_TIMER) && (
+              <div className="flex gap-4">
                 <ConfirmButton
                   onClick={onConfirm}
                   children="Guardar"
                 />
-              )}
-              {(step === STEP.SHOW_CONFIRM || step === STEP.START_TIMER) && (
                 <Button
-                  onClick={onReset}
-                  children="Volver a empezar"
+                onClick={onReset}
+                children="Volver a empezar"
                 />
-              )}
-            </div>
+              </div>
+            )}
           </>
         )}
       </div>
