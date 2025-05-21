@@ -30,7 +30,8 @@ export default async function Home() {
           </p>
         </section>
         <section className='max-w-[850] mx-auto'>
-          <h2 className="m-4 block text-gray-400 mt-2 text-xl lg:ml-0">Retos de temporada</h2>
+          <h2 className="m-4 mb-2 block text-gray-100 mt-2 text-xl lg:ml-0">Retos de temporada</h2>
+          <p className="m-4 mt-2 block text-gray-400 lg:ml-0">Activos durante mayo</p>
           <Challenges challenges={seasonalChallenges} />
         </section>
         <section className="p-4 my-10 md:my-10 lg:p-0 lg:my-20 lg:mt-40 max-w-[720] mx-auto">
@@ -87,18 +88,6 @@ export default async function Home() {
               </div>
             </li>
             <li className="flex gap-2">
-              <span className="text-2xl">📆</span>
-              <div>
-                <h3 className="font-semibold text-lg text-balance mb-2 text-red-300">
-                  5 Retos cada día
-                </h3>
-                <p className="text-gray-400 text-balance">
-                  2 retos de temporada y 3 retos del día.
-                  Lo puedes hacer durante tus pausas o al final del día. ¡Tú eliges!
-                </p>
-              </div>
-            </li>
-            <li className="flex gap-2">
               <span className="text-2xl">⚡</span>
               <div>
                 <h3 className="font-semibold text-lg text-balance mb-2">
@@ -118,6 +107,28 @@ export default async function Home() {
                 </h3>
                 <p className="text-gray-400 text-balance">
                   Sabemos lo que necesitas porque también pasamos horas en la PC.
+                </p>
+              </div>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-2xl">📆</span>
+              <div>
+                <h3 className="font-semibold text-lg text-balance mb-2 text-red-300">
+                  3 Retos cada día
+                </h3>
+                <p className="text-gray-400 text-balance">
+                  Lo puedes hacer durante tus pausas. ¡Tú eliges!
+                </p>
+              </div>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-2xl">📆</span>
+              <div>
+                <h3 className="font-semibold text-lg text-balance mb-2 text-red-300">
+                  2 Retos de temporada por mes
+                </h3>
+                <p className="text-gray-400 text-balance">
+                  Son retos más difíciles, pero con más beneficios. ¡Atrévete!
                 </p>
               </div>
             </li>
