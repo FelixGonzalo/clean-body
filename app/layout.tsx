@@ -73,7 +73,7 @@ export default function RootLayout({
               <SignUpButton />
             </SignedOut>
             <SignedIn>
-              <Link href={"/my-challenges"}>Mis retos</Link>
+              <Link href={"/my-challenges"} className='animate-background-shine bg-[linear-gradient(110deg,#e8a3a3,45%,#9f9eff,55%,#f89191)] bg-[length:250%_100%] bg-clip-text text-transparent'>Mis retos</Link>
               <UserButton />
             </SignedIn>
           </header>
