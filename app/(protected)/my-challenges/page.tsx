@@ -63,7 +63,7 @@ export default function MyChallenges() {
   })
 
   return (
-    <main className="p-4 max-w-100 mx-auto mb-20">
+    <div className="p-4 max-w-100 mx-auto mb-20">
       <Avatar user={{
         fullName: user?.fullName || "",
         imageUrl: user?.imageUrl
@@ -91,6 +91,6 @@ export default function MyChallenges() {
           <LastChallenges userChallenges={GetUserChallenges.data} todayStr={todayStr} />
         </div>
       )}
-    </main>
+    </div>
   )
 }

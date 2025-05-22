@@ -35,7 +35,7 @@ export default async function Challenge({params}: Props) {
   const isSeasonalChallenge = seasonalChallenges.find(obj => obj.id === challenge.id);
 
   return (
-    <main className='min-h-screen'>
+    <>
       <img
         className="w-full h-screen max-h-screen object-cover opacity-5 absolute -z-10"
         src={challenge?.image || defaultImg}
@@ -63,6 +63,6 @@ export default async function Challenge({params}: Props) {
           seasonalChallenges={seasonalChallenges}
         />
       </div>
-    </main>
+    </>
   )
 }

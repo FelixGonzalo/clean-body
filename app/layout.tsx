@@ -77,7 +77,9 @@ export default function RootLayout({
               <UserButton />
             </SignedIn>
           </header>
-          {children}
+          <main className='min-h-screen'>
+            {children}
+          </main>
           <footer className="p-4 flex justify-between items-center lg:px-10">
             <Link
               href={'https://github.com/FelixGonzalo/clean-body'}
