@@ -19,7 +19,7 @@
 - Retos diarios
 - Marcar retos como completados
 - Ver progreso semanal
-- Perfil compartible con tus estadísticas
+- [Perfil compartible con tus estadísticas](https://www.cleanbody.dev/devs/user_2xExpxDb2iynLTUqbkPw1zZjLpu)
 
 ## Me gustaría agregar
 
