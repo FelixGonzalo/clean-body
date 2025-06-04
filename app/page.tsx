@@ -30,7 +30,7 @@ export default async function Home() {
       </section>
       <section className='max-w-[850] mx-auto'>
         <h2 className="m-4 mb-2 block text-gray-100 mt-2 text-xl lg:ml-0">Retos de temporada</h2>
-        <p className="m-4 mt-2 block text-gray-400 lg:ml-0">Activos durante mayo</p>
+        <p className="m-4 mt-2 block text-gray-400 lg:ml-0">Activos durante junio</p>
         <Challenges challenges={seasonalChallenges} />
       </section>
       <section className="p-4 my-10 md:my-10 lg:p-0 lg:my-20 lg:mt-40 max-w-[720] mx-auto">
